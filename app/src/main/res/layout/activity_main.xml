@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+
+    <!-- Menu -->
+    <LinearLayout
+        android:id="@+id/linearLayoutMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="550dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:textSize="20sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayoutButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="WORDLE"
+        tools:visibility="visible">
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wordle"
+            android:visibility="visible"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+
+
+    <!-- Tiles -->
+    <LinearLayout
+        android:id="@+id/linearLayoutTiles"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="25dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayoutButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <include
+            layout="@layout/line"
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/line"
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/line"
+            android:id="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/line"
+            android:id="@+id/line4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/line"
+            android:id="@+id/line5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/line"
+            android:id="@+id/line6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+    <!-- KeyBoard -->
+    <LinearLayout
+        android:id="@+id/linearLayoutButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="100dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutTiles">
+
+        <!-- Buttons Line 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <Button
+                android:id="@+id/ButtonQ"
+                android:text="@string/q"
+                tools:text="Q"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonW"
+                android:text="@string/w"
+                tools:text="W"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonE"
+                android:text="@string/e"
+                tools:text="E"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonR"
+                android:text="@string/r"
+                tools:text="R"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonT"
+                android:text="@string/t"
+                tools:text="T"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonY"
+                android:text="@string/y"
+                tools:text="Y"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonU"
+                android:text="@string/u"
+                tools:text="U"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonI"
+                android:text="@string/i"
+                tools:text="I"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonO"
+                android:text="@string/o"
+                tools:text="O"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonP"
+                android:text="@string/p"
+                tools:text="P"
+                style="@style/Button"/>
+        </LinearLayout>
+
+        <!-- Buttons Line 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <Button
+                android:id="@+id/ButtonA"
+                android:text="@string/a"
+                tools:text="A"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonS"
+                android:text="@string/s"
+                tools:text="S"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonD"
+                android:text="@string/d"
+                tools:text="D"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonF"
+                android:text="@string/f"
+                tools:text="F"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonG"
+                android:text="@string/g"
+                tools:text="G"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonH"
+                android:text="@string/h"
+                tools:text="H"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonJ"
+                android:text="@string/j"
+                tools:text="J"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonK"
+                android:text="@string/k"
+                tools:text="K"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonL"
+                android:text="@string/l"
+                tools:text="L"
+                style="@style/Button"/>
+        </LinearLayout>
+
+        <!-- Buttons Line 3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <Button
+                android:id="@+id/ButtonEnter"
+                android:text="@string/enter"
+                tools:text="↵"
+                android:textSize="36sp"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonZ"
+                android:text="@string/z"
+                tools:text="Z"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonX"
+                android:text="@string/x"
+                tools:text="X"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonC"
+                android:text="@string/c"
+                tools:text="C"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonV"
+                android:text="@string/v"
+                tools:text="V"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonB"
+                android:text="@string/b"
+                tools:text="B"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonN"
+                android:text="@string/n"
+                tools:text="N"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonM"
+                android:text="@string/m"
+                tools:text="M"
+                style="@style/Button"/>
+
+            <Button
+                android:id="@+id/ButtonDelete"
+                android:text="@string/delete"
+                tools:text="⌫"
+                style="@style/Button"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
