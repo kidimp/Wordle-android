@@ -3,16 +3,19 @@
 <resources>
 
     <style name="Tile" parent="TextAppearance.AppCompat">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:background">@drawable/tile_empty</item>
         <item name="android:ems">3</item>
         <item name="android:visibility">visible</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="Button" parent="android:style/Widget.Button">
-        <item name="android:layout_width">38dp</item>
+        <item name="android:layout_width">36dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingTop">0dp</item>
@@ -20,7 +23,7 @@
         <item name="android:paddingBottom">0dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">sans-serif-black</item>
-        <item name="android:layout_margin">0.5dp</item>
+        <item name="android:layout_margin">2dp</item>
         <item name="android:background">@drawable/my_button</item>
     </style>
 

@@ -1,9 +1,12 @@
 package com.chous.wordle;
 
+import java.util.IllegalFormatCodePointException;
+
 public class WordsRepository {
     private static WordsRepository instance;
 
-    private WordsRepository() { }
+    private WordsRepository() {
+    }
 
     public static WordsRepository getInstance() {
         if (instance == null) {
@@ -14,16 +17,25 @@ public class WordsRepository {
 
 
     private String word;
+    private final String[] words = {"QWERT", "YUIOP", "ASDFG", "HJKLZ", "XCVBN", "CHOUS"};
 
-    public void generateWord(){
+
+    public void generateWord() {
         word = "chous".toUpperCase();
     }
+
 
     public String getWord() {
         return word;
     }
 
+
     public boolean isAttemptExist(String attempt) {
-        return true;
+        for (String word : words) {
+            if (word.equals(attempt)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

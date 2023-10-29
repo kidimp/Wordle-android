@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 public class App extends Application {
-
-    private static Context mContext;
+    // add to manifest "android:name=".App""
+    private static App mContext;
 
     @Override
     public void onCreate() {
@@ -13,7 +13,7 @@ public class App extends Application {
         mContext = this;
     }
 
-    public static Context getContext(){
+    public static App getContext() {
         return mContext;
     }
 }

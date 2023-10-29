@@ -2,13 +2,8 @@ package com.chous.wordle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import android.os.Bundle;
-
 import android.widget.Button;
-import android.widget.Toast;
-
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
         tilesLines[activeLineIndex].recolor();
 
         if (compareAttemptWithWord(attempt)) {
-            Toast.makeText(getApplicationContext(), "You win!", Toast.LENGTH_SHORT).show();
-        } else {
-
+            Message.show(activeLineIndex);
         }
+
+        activeLineIndex++;
     }
 
     private void ButtonDeleteClick() {
@@ -113,6 +108,5 @@ public class MainActivity extends AppCompatActivity {
     private boolean compareAttemptWithWord(String attempt) {
         return attempt.equals(wordsRepository.getWord());
     }
-
 
 }

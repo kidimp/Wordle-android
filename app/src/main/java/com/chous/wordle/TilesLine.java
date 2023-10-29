@@ -55,27 +55,19 @@ public class TilesLine {
         String attempt = getAttempt();
         String word = WordsRepository.getInstance().getWord();
 
-        for (int i = 0; i < MainActivity.WORDLE_LENGTH; i++) {
-
-        }
-
-        //for (char letter : attempt.toCharArray()) {
         for (int i = 0; i < attempt.length(); i++) {
             int index = word.indexOf(attempt.substring(i, i + 1));
             if (index >= 0) {
                 if (index == i) {
                     tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
                             R.drawable.tile_green, null));
-                    //green;
                 } else {
                     tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
                             R.drawable.tile_yellow, null));
-                    //yellow
                 }
             } else {
                 tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
                         R.drawable.tile_gray, null));
-                //gray
             }
         }
     }
