@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-
-    private WordsRepository wordsRepository;
+    private DBHandler dbHandler;
 
     public static final int WORDLE_LENGTH = 5;
     public static final int AMOUNT_OF_ATTEMPTS = 6;
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         tilesLines[5] = new TilesLine(findViewById(R.id.line6));
     }
 
+
     private void setupViews() {
         for (Button btn : buttonsLetters) {
             btn.setOnClickListener(v -> ButtonLetterClick(btn));
@@ -68,45 +68,57 @@ public class MainActivity extends AppCompatActivity {
         buttonDelete.setOnClickListener(v -> ButtonDeleteClick());
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        wordsRepository = WordsRepository.getInstance();
-
         initViews();
         setupViews();
 
-        wordsRepository.generateWord();
+        dbHandler = DBHandler.getInstance();
+        dbHandler.generateRandomWord();
+
+        Message.setMessageSettings();
     }
+
 
     private void ButtonLetterClick(Button button) {
         tilesLines[activeLineIndex].add((String) button.getText());
     }
 
+
     private void ButtonEnterClick() {
         String attempt = tilesLines[activeLineIndex].getAttempt();
 
-        if (!wordsRepository.isAttemptExist(attempt)) {
+        if (attempt.length() < 5) {
+            Message.notEnoughLetters();
             return;
+        } else {
+            if (!dbHandler.isAttemptExist(attempt)) {
+                Message.notInWordList();
+                return;
+            }
         }
 
         tilesLines[activeLineIndex].recolor();
 
         if (compareAttemptWithWord(attempt)) {
-            Message.show(activeLineIndex);
+            Message.win(activeLineIndex);
         }
 
         activeLineIndex++;
     }
 
+
     private void ButtonDeleteClick() {
         tilesLines[activeLineIndex].remove();
     }
 
+
     private boolean compareAttemptWithWord(String attempt) {
-        return attempt.equals(wordsRepository.getWord());
+        return attempt.equals(dbHandler.getWord());
     }
 
 }

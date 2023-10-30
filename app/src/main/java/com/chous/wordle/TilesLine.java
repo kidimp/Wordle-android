@@ -53,7 +53,7 @@ public class TilesLine {
 
     public void recolor() {
         String attempt = getAttempt();
-        String word = WordsRepository.getInstance().getWord();
+        String word = DBHandler.getInstance().getWord();
 
         for (int i = 0; i < attempt.length(); i++) {
             int index = word.indexOf(attempt.substring(i, i + 1));

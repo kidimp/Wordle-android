@@ -6,37 +6,22 @@ import android.widget.Toast;
 import es.dmoral.toasty.Toasty;
 
 public class Message {
-    public static void show(int tryIndex) {
+    static String[] message = {"Genius", "Magnificent", "Impressive", "Splendid", "Great", "Phew"};
+
+    public static void setMessageSettings() {
         Toasty.Config.getInstance()
                 .setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 300).apply();
-        switch (tryIndex){
-            case 0:{
-                Toasty.normal(App.getContext(), "Genius", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case 1:{
-                Toasty.normal(App.getContext(), "Magnificent", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case 2:{
-                Toasty.normal(App.getContext(), "Impressive", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case 3:{
-                Toasty.normal(App.getContext(), "Splendid", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case 4:{
-                Toasty.normal(App.getContext(), "Great", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case 5:{
-                Toasty.normal(App.getContext(), "Phew", Toast.LENGTH_SHORT).show();
-                break;
-            }
-        }
+    }
 
+    public static void win(int tryIndex) {
+        Toasty.normal(App.getContext(), message[tryIndex], Toast.LENGTH_SHORT).show();
+    }
 
+    public static void notInWordList() {
+        Toasty.normal(App.getContext(), "Not in word list", Toast.LENGTH_SHORT).show();
+    }
 
+    public static void notEnoughLetters() {
+        Toasty.normal(App.getContext(), "Not enough letters", Toast.LENGTH_SHORT).show();
     }
 }
