@@ -51,7 +51,7 @@ public class TilesLine {
         return attempt.toString().toUpperCase();
     }
 
-    public void recolor() {
+    public void recolorTiles() {
         String attempt = getAttempt();
         String word = DBHandler.getInstance().getWord();
 
@@ -67,7 +67,7 @@ public class TilesLine {
                 }
             } else {
                 tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
-                        R.drawable.tile_gray, null));
+                        R.drawable.tile_gray_dark, null));
             }
         }
     }

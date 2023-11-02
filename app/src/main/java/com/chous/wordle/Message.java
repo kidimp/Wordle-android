@@ -17,6 +17,10 @@ public class Message {
         Toasty.normal(App.getContext(), message[tryIndex], Toast.LENGTH_SHORT).show();
     }
 
+    public static void lose(String word) {
+        Toasty.normal(App.getContext(), word, Toast.LENGTH_LONG).show();
+    }
+
     public static void notInWordList() {
         Toasty.normal(App.getContext(), "Not in word list", Toast.LENGTH_SHORT).show();
     }

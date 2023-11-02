@@ -21,15 +21,25 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:color="@color/black"
             android:fontFamily="sans-serif-black"
             android:gravity="center_horizontal"
             android:text="@string/wordle"
             android:textSize="26sp"
             android:visibility="visible"
-            tools:visibility="visible"
-            android:color="@color/black" />
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/button_result"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/result"
+            android:layout_marginStart="50dp"/>
+
+
     </LinearLayout>
 
 
@@ -294,6 +304,5 @@
                 tools:text="⌫" />
         </LinearLayout>
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
