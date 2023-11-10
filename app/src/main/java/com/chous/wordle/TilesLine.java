@@ -9,13 +9,14 @@ public class TilesLine {
     TextView[] tiles;
 
     public TilesLine(LinearLayout layout) {
-        tiles = new TextView[MainActivity.WORDLE_LENGTH];
+        tiles = new TextView[Game.WORDLE_LENGTH];
         tiles[0] = layout.findViewById(R.id.Tile1);
         tiles[1] = layout.findViewById(R.id.Tile2);
         tiles[2] = layout.findViewById(R.id.Tile3);
         tiles[3] = layout.findViewById(R.id.Tile4);
         tiles[4] = layout.findViewById(R.id.Tile5);
     }
+
 
     public void add(String letter) {
         TextView activeTile = getActiveTile();
@@ -24,14 +25,16 @@ public class TilesLine {
         }
     }
 
+
     public void remove() {
-        for (int i = MainActivity.WORDLE_LENGTH - 1; i >= 0; i--) {
+        for (int i = Game.WORDLE_LENGTH - 1; i >= 0; i--) {
             if (!tiles[i].getText().equals("")) {
                 tiles[i].setText("");
                 break;
             }
         }
     }
+
 
     private TextView getActiveTile() {
         for (TextView tile : tiles) {
@@ -51,6 +54,7 @@ public class TilesLine {
         return attempt.toString().toUpperCase();
     }
 
+
     public void recolorTiles() {
         String attempt = getAttempt();
         String word = DBHandler.getInstance().getWord();
@@ -69,6 +73,14 @@ public class TilesLine {
                 tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
                         R.drawable.tile_gray_dark, null));
             }
+        }
+    }
+
+    public void clean() {
+        for (TextView textView : tiles) {
+            textView.setText("");
+            textView.setBackground(ResourcesCompat.getDrawable(textView.getContext().getResources(),
+                    R.drawable.tile_empty, null));
         }
     }
 }

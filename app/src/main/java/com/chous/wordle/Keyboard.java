@@ -61,7 +61,7 @@ public class Keyboard {
 
         for (int i = 0; i < attempt.length(); i++) {
             int index = -1;
-            for (int j = 0; j < buttonsLetters.length - 1; j++) {
+            for (int j = 0; j < buttonsLetters.length; j++) {
                 if (buttonsLetters[j].getText().equals(attempt.substring(i, i + 1))) {
                     index = j;
                 }
@@ -78,6 +78,21 @@ public class Keyboard {
                 buttonsLetters[index].setBackground(ResourcesCompat.getDrawable(buttonsLetters[index].getContext().getResources(),
                         R.drawable.button_green, null));
             }
+        }
+    }
+
+    public void blockButtons() {
+        for (Button buttonLetter : buttonsLetters) {
+            buttonLetter.setOnClickListener(null);
+        }
+        buttonEnter.setOnClickListener(null);
+        buttonDelete.setOnClickListener(null);
+    }
+
+    public void clean() {
+        for (Button button : buttonsLetters) {
+            button.setBackground(ResourcesCompat.getDrawable(button.getContext().getResources(),
+                    R.drawable.button_gray_light, null));
         }
     }
 }

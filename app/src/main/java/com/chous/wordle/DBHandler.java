@@ -4,8 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DBHandler extends SQLiteOpenHelper {
+    private static final String DB_NAME = "wordle-android.db";
+    private static final int DB_VERSION = 1;
+    private static final String TABLE_NAME = "words";
+    private static final String NAME_COL = "word";
+    private String word;
     private static DBHandler instance;
     SQLiteDatabase db = this.getReadableDatabase();
 
@@ -21,36 +27,34 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    private static final String DB_NAME = "wordle-android.db";
-    private static final int DB_VERSION = 1;
-    private static final String TABLE_NAME = "words";
-    private static final String NAME_COL = "word";
-    private String word;
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
+
     public void generateRandomWord() {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY RANDOM() LIMIT 1", null);
         if (cursor.moveToFirst()) {
-        word = cursor.getString(1).toUpperCase();
+            word = cursor.getString(1).toUpperCase();
+            Log.d("TARGET WORD ----------> ", word);
         }
         cursor.close();
     }
+
 
     public String getWord() {
         return word;
     }
 
+
     public boolean isAttemptExist(String attempt) {
         Cursor cursor = db.rawQuery("SELECT EXISTS(SELECT  " + NAME_COL + "  FROM "
-                + TABLE_NAME + " WHERE " + NAME_COL + " = '" + attempt + "')", null);
+                + TABLE_NAME + " WHERE " + NAME_COL + " = '" + attempt.toLowerCase() + "')", null);
         cursor.moveToFirst();
 
         // cursor.getInt(0) is 1 if column with value exists

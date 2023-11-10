@@ -33,6 +33,6 @@
 
     <string name="wordle">WORDLE</string>
     <string name="result">result</string>
-
+    <string name="play_again">Play again!</string>
 
 </resources>

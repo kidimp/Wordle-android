@@ -7,9 +7,9 @@
     tools:context=".MainActivity">
 
 
-    <!-- Menu -->
+    <!-- Title -->
     <LinearLayout
-        android:id="@+id/linearLayoutMenu"
+        android:id="@+id/linearLayoutTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -18,10 +18,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:layout_width="127dp"
             android:layout_height="wrap_content"
             android:color="@color/black"
             android:fontFamily="sans-serif-black"
@@ -30,16 +29,32 @@
             android:textSize="26sp"
             android:visibility="visible"
             tools:visibility="visible" />
-
-        <Button
-            android:id="@+id/button_result"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/result"
-            android:layout_marginStart="50dp"/>
+    </LinearLayout>
 
 
+    <!-- Stats -->
+    <LinearLayout
+        android:id="@+id/linearLayoutStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayoutTiles"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/linearLayoutTitle"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/button_stats"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#F9F9F9"
+            android:paddingStart="1dp"
+            android:paddingTop="1dp"
+            android:paddingEnd="1dp"
+            android:paddingBottom="1dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/stats" />
     </LinearLayout>
 
 
@@ -53,7 +68,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutMenu">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutTitle">
 
         <include
             android:id="@+id/line1"

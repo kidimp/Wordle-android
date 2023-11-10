@@ -1,49 +1,43 @@
 package com.chous.wordle;
-import android.app.Activity;
+
 import android.app.Dialog;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class MyDialog {
-
-    Activity activity;
+public class DialogResult {
+    MainActivity activity;
     TextView txt_Message;
-    Button buttonCloseDialog;
-//    Button buttonNewGame;
+    ImageButton buttonCloseDialog;
+    Button buttonNewGame;
     Dialog dialog;
 
-    public MyDialog(Activity activity) {
+    public DialogResult(MainActivity activity) {
         this.activity = activity;
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.my_dialog);
-        txt_Message = dialog.findViewById(R.id.my_dialog);
+        dialog.setContentView(R.layout.dialog_stats);
+        txt_Message = dialog.findViewById(R.id.statistics);
 
         buttonCloseDialog = dialog.findViewById(R.id.button_close_dialog);
-//        buttonNewGame = dialog.findViewById(R.id.button_new_game);
+        buttonNewGame = dialog.findViewById(R.id.button_new_game);
 
         setupDialogView();
     }
 
     private void setupDialogView() {
         buttonCloseDialog.setOnClickListener(v -> buttonCloseDialogClick());
-//        buttonNewGame.setOnClickListener(v -> newGame());
+        buttonNewGame.setOnClickListener(v -> buttonNewGameClick());
     }
 
     public void showDialog(String message) {
-
-
-
         txt_Message.setText(message);
-
         dialog.show();
     }
 
-    public void buttonCloseDialogClick() {
+    private void buttonCloseDialogClick() {
         try {
             dialog.dismiss();
         } catch (Exception e) {
@@ -51,7 +45,8 @@ public class MyDialog {
         }
     }
 
-    public Button getButtonCloseDialog() {
-        return buttonCloseDialog;
+    private void buttonNewGameClick() {
+        activity.getGame().create();
+        buttonCloseDialogClick();
     }
 }
