@@ -1,114 +1,99 @@
 package com.chous.wordle;
 
-import android.widget.Button;
-import android.widget.ImageButton;
-
 public class Game {
+    Grid grid;
     MainActivity activity;
+    private Word word;
     private final DBHandler dbHandler;
     public static final int WORDLE_LENGTH = 5;
     public static final int AMOUNT_OF_ATTEMPTS = 6;
-    TilesLine[] tilesLines = new TilesLine[AMOUNT_OF_ATTEMPTS];
-    Keyboard keyboard;
-    int activeLineIndex = 0;
-    private ImageButton buttonStats;
+
 
     public Game(MainActivity activity) {
         this.activity = activity;
 
-        initViews();
+        grid = new Grid(activity);
 
         dbHandler = DBHandler.getInstance();
     }
 
 
-    public void initViews() {
-        tilesLines[0] = new TilesLine(activity.findViewById(R.id.line1));
-        tilesLines[1] = new TilesLine(activity.findViewById(R.id.line2));
-        tilesLines[2] = new TilesLine(activity.findViewById(R.id.line3));
-        tilesLines[3] = new TilesLine(activity.findViewById(R.id.line4));
-        tilesLines[4] = new TilesLine(activity.findViewById(R.id.line5));
-        tilesLines[5] = new TilesLine(activity.findViewById(R.id.line6));
-
-        keyboard = new Keyboard(activity.findViewById(R.id.linearLayoutButtons));
-
-        buttonStats = activity.findViewById(R.id.button_stats);
-    }
-
-
     public void create() {
-        for (TilesLine tilesLine : tilesLines) {
-            tilesLine.clean();
-        }
-
-        keyboard.clean();
-
-        for (Button btn : keyboard.getButtonsLetters()) {
-            btn.setOnClickListener(v -> ButtonLetterClick(btn));
-        }
-        keyboard.getButtonEnter().setOnClickListener(v -> ButtonEnterClick());
-        keyboard.getButtonDelete().setOnClickListener(v -> ButtonDeleteClick());
-
-        activeLineIndex = 0;
-
-        buttonStats.setOnClickListener(v -> ButtonResultClick());
-        Message.setMessageSettings();
-
         dbHandler.generateRandomWord();
+        word = dbHandler.getWord();
+        grid.clean();
+        activity.keyboard.clean();
+        activity.keyboard.unblockButtons();
+    }
+
+    public void ButtonLetterClick(String text) {
+        grid.addLetter(text);
     }
 
 
-    private void ButtonLetterClick(Button button) {
-        tilesLines[activeLineIndex].add((String) button.getText());
-    }
+    public void ButtonEnterClick() {
+        String attempt = grid.getCurrentAttempt();
 
-
-    public void ButtonResultClick() {
-        DialogResult dialogResult = new DialogResult(activity);
-        dialogResult.showDialog("Here will be the statistics");
-    }
-
-
-    private void ButtonEnterClick() {
-        String attempt = tilesLines[activeLineIndex].getAttempt();
-
-        if (attempt.length() < 5) {
-            Message.notEnoughLetters();
+        if (!isPossibleAttempt(attempt)) {
             return;
+        }
+
+        grid.apply();
+
+        recolorViews();
+
+        if (word.compare(attempt)) {
+            winResult();
+            return;
+        }
+
+        if (grid.getActiveLineIndex() >= Game.AMOUNT_OF_ATTEMPTS -1) {
+            loseResult();
+            return;
+        }
+
+        grid.nextLine();
+    }
+
+
+    public void ButtonDeleteClick() {
+        grid.removeLetter();
+    }
+
+    private void showStat() {
+        activity.keyboard.blockButtons();
+        activity.ButtonResultClick();
+    }
+
+    private void winResult() {
+        Message.win(grid.getActiveLineIndex());
+        showStat();
+    }
+
+    private void loseResult() {
+        Message.lose(word.getText());
+        showStat();
+    }
+
+    private boolean isPossibleAttempt(String attempt) {
+        if (attempt.length() < Game.WORDLE_LENGTH) {
+            Message.notEnoughLetters();
+            return false;
         } else {
             if (!dbHandler.isAttemptExist(attempt)) {
                 Message.notInWordList();
-                return;
+                return false;
             }
         }
-
-        tilesLines[activeLineIndex].recolorTiles();
-        keyboard.recolorButtons(attempt);
-
-        if (compareAttemptWithWord(attempt)) {
-            Message.win(activeLineIndex);
-            keyboard.blockButtons();
-            ButtonResultClick();
-            return;
-        }
-
-        activeLineIndex++;
-
-        if (activeLineIndex == 6) {
-            Message.lose(dbHandler.getWord());
-            keyboard.blockButtons();
-            ButtonResultClick();
-        }
+        return true;
     }
 
 
-    private void ButtonDeleteClick() {
-        tilesLines[activeLineIndex].remove();
+    private void recolorViews() {
+        grid.recolor();
+        activity.keyboard.recolorButtons(grid);
     }
 
 
-    private boolean compareAttemptWithWord(String attempt) {
-        return attempt.equals(dbHandler.getWord());
-    }
 
 }

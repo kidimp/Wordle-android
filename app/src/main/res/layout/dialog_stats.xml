@@ -23,7 +23,7 @@
             android:id="@+id/button_close_dialog"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="#FFFFFF"
+            android:background="#00ffffff"
             android:paddingStart="1dp"
             android:paddingTop="1dp"
             android:paddingEnd="1dp"

@@ -6,14 +6,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class DialogResult {
+public class DialogStats {
     MainActivity activity;
     TextView txt_Message;
     ImageButton buttonCloseDialog;
     Button buttonNewGame;
     Dialog dialog;
 
-    public DialogResult(MainActivity activity) {
+    public DialogStats(MainActivity activity) {
         this.activity = activity;
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -48,7 +48,7 @@
             android:id="@+id/button_stats"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="#F9F9F9"
+            android:background="#00ffffff"
             android:paddingStart="1dp"
             android:paddingTop="1dp"
             android:paddingEnd="1dp"

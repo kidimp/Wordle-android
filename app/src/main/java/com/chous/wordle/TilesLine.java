@@ -6,6 +6,7 @@ import android.widget.TextView;
 import androidx.core.content.res.ResourcesCompat;
 
 public class TilesLine {
+    Word attempt;
     TextView[] tiles;
 
     public TilesLine(LinearLayout layout) {
@@ -16,7 +17,6 @@ public class TilesLine {
         tiles[3] = layout.findViewById(R.id.Tile4);
         tiles[4] = layout.findViewById(R.id.Tile5);
     }
-
 
     public void add(String letter) {
         TextView activeTile = getActiveTile();
@@ -45,8 +45,12 @@ public class TilesLine {
         return null;
     }
 
+    public void applyAttempt() {
+        attempt = new Word(constructAttempt());
+        attempt.checkAttempt(DBHandler.getInstance().getWord());
+    }
 
-    public String getAttempt() {
+    public String constructAttempt() {
         StringBuilder attempt = new StringBuilder();
         for (TextView tile : tiles) {
             attempt.append(tile.getText());
@@ -54,30 +58,42 @@ public class TilesLine {
         return attempt.toString().toUpperCase();
     }
 
+    public Word getAttempt(){
+        return attempt;
+    }
+
 
     public void recolorTiles() {
-        String attempt = getAttempt();
-        String word = DBHandler.getInstance().getWord();
-
-        for (int i = 0; i < attempt.length(); i++) {
-            int index = word.indexOf(attempt.substring(i, i + 1));
-            if (index >= 0) {
-                if (index == i) {
+        Letter[] letters = attempt.getLetters();
+        for (int i = 0; i < letters.length; i++) {
+            switch (letters[i].getStatus()) {
+                case NONE: {
                     tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
-                            R.drawable.tile_green, null));
-                } else {
+                            R.drawable.tile_empty, null));
+                    break;
+                }
+                case ABSENT: {
+                    tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
+                            R.drawable.tile_gray_dark, null));
+                    break;
+                }
+                case PRESENT: {
                     tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
                             R.drawable.tile_yellow, null));
+                    break;
                 }
-            } else {
-                tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
-                        R.drawable.tile_gray_dark, null));
+                case CORRECT: {
+                    tiles[i].setBackground(ResourcesCompat.getDrawable(tiles[i].getContext().getResources(),
+                            R.drawable.tile_green, null));
+                    break;
+                }
             }
         }
     }
 
     public void clean() {
         for (TextView textView : tiles) {
+            attempt = null;
             textView.setText("");
             textView.setBackground(ResourcesCompat.getDrawable(textView.getContext().getResources(),
                     R.drawable.tile_empty, null));

@@ -11,7 +11,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
     private static final String TABLE_NAME = "words";
     private static final String NAME_COL = "word";
-    private String word;
+    private Word word;
     private static DBHandler instance;
     SQLiteDatabase db = this.getReadableDatabase();
 
@@ -40,14 +40,15 @@ public class DBHandler extends SQLiteOpenHelper {
     public void generateRandomWord() {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY RANDOM() LIMIT 1", null);
         if (cursor.moveToFirst()) {
-            word = cursor.getString(1).toUpperCase();
-            Log.d("TARGET WORD ----------> ", word);
+            word = new Word(cursor.getString(1).toUpperCase());
+            word = new Word("RALLY");
+            Log.d("TARGET WORD ----------> ", word.getText());
         }
         cursor.close();
     }
 
 
-    public String getWord() {
+    public Word getWord() {
         return word;
     }
 
