@@ -4,7 +4,7 @@ import android.app.Activity;
 
 public class Grid {
     private int activeLineIndex;
-    private TilesLine[] tilesLines;
+    private final TilesLine[] tilesLines;
 
     Grid(Activity activity) {
         activeLineIndex = 0;
@@ -42,9 +42,9 @@ public class Grid {
     }
 
     public void recolor() {
-        for (int i = 0; i < tilesLines.length; i++) {
-            if (tilesLines[i].attempt != null) {
-                tilesLines[i].recolorTiles();
+        for (TilesLine tilesLine : tilesLines) {
+            if (tilesLine.attempt != null) {
+                tilesLine.recolorTiles();
             }
         }
     }

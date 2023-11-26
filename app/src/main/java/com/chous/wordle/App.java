@@ -1,7 +1,6 @@
 package com.chous.wordle;
 
 import android.app.Application;
-import android.content.Context;
 
 public class App extends Application {
     // add to manifest "android:name=".App""

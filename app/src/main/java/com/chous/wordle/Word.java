@@ -11,11 +11,11 @@ public class Word {
     }
 
     public String getText() {
-        String word = "";
+        StringBuilder word = new StringBuilder();
         for (Letter letter : letters) {
-            word += letter.getText();
+            word.append(letter.getText());
         }
-        return word.toUpperCase();
+        return word.toString().toUpperCase();
     }
 
     public Letter[] getLetters() {

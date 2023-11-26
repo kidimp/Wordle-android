@@ -24,6 +24,7 @@ public class Keyboard {
         buttonDelete = layout.findViewById(R.id.ButtonDelete);
     }
 
+
     public void setup(Game game) {
         for (Button btn : buttonsLetters) {
             btn.setOnClickListener(v -> game.ButtonLetterClick((String) btn.getText()));
@@ -31,6 +32,7 @@ public class Keyboard {
         buttonEnter.setOnClickListener(v -> game.ButtonEnterClick());
         buttonDelete.setOnClickListener(v -> game.ButtonDeleteClick());
     }
+
 
     private Button getLetterButton(String text) {
         for (Button btn : buttonsLetters) {
@@ -41,7 +43,13 @@ public class Keyboard {
         return null;
     }
 
+
     public void recolorButtons(Grid grid) {
+        recolorAttemptButtons(grid);
+        recolorWordButtons();
+    }
+
+    public void recolorAttemptButtons(Grid grid) {
         TilesLine[] tilesLines = grid.getTilesLines();
         TilesLine currentTilesLine = tilesLines[grid.getActiveLineIndex()];
         Word attempt = currentTilesLine.getAttempt();
@@ -49,7 +57,9 @@ public class Keyboard {
         for (Letter letter : attempt.getLetters()) {
             recolor(letter);
         }
+    }
 
+    public void recolorWordButtons() {
         for (Letter letter : DBHandler.getInstance().getWord().getLetters()) {
             recolor(letter);
         }
@@ -81,6 +91,7 @@ public class Keyboard {
         }
     }
 
+
     public void blockButtons() {
         for (Button button : buttonsLetters) {
             button.setEnabled(false);
@@ -96,6 +107,7 @@ public class Keyboard {
         buttonEnter.setEnabled(true);
         buttonDelete.setEnabled(true);
     }
+
 
     public void clean() {
         for (Button button : buttonsLetters) {

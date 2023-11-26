@@ -8,23 +8,40 @@ import android.widget.TextView;
 
 public class DialogStats {
     MainActivity activity;
-    TextView txt_Message;
+    TextView txt_message;
+    TextView numberOfPlayedGames;
+    TextView percentOfWins;
+    TextView streak;
+    TextView maxStreak;
     ImageButton buttonCloseDialog;
     Button buttonNewGame;
     Dialog dialog;
+    private final DBHandler dbHandler;
 
     public DialogStats(MainActivity activity) {
+        dbHandler = DBHandler.getInstance();
         this.activity = activity;
+
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_stats);
-        txt_Message = dialog.findViewById(R.id.statistics);
+
+        innitViews();
+
+        setupDialogView();
+    }
+
+    private void innitViews() {
+        txt_message = dialog.findViewById(R.id.statistics1);
+
+        numberOfPlayedGames = dialog.findViewById(R.id.played);
+        percentOfWins = dialog.findViewById(R.id.wins_persentage);
+        streak = dialog.findViewById(R.id.current_streak);
+        maxStreak = dialog.findViewById(R.id.max_streak);
 
         buttonCloseDialog = dialog.findViewById(R.id.button_close_dialog);
         buttonNewGame = dialog.findViewById(R.id.button_new_game);
-
-        setupDialogView();
     }
 
     private void setupDialogView() {
@@ -32,8 +49,7 @@ public class DialogStats {
         buttonNewGame.setOnClickListener(v -> buttonNewGameClick());
     }
 
-    public void showDialog(String message) {
-        txt_Message.setText(message);
+    public void showDialog() {
         dialog.show();
     }
 
@@ -48,5 +64,19 @@ public class DialogStats {
     private void buttonNewGameClick() {
         activity.getGame().create();
         buttonCloseDialogClick();
+    }
+
+
+    public void updateStatsView() {
+        int numberOfGames = dbHandler.getNumberOfGames();
+        int numberOfWins = dbHandler.getNumberOfWins();
+        double winningPercent = (numberOfGames > 0) ? ((double) numberOfWins / numberOfGames) * 100 : 0.0;
+        int currentStreak = dbHandler.getStreak();
+        int max_streak = dbHandler.getMaxStreak();
+
+        numberOfPlayedGames.setText(String.valueOf(numberOfGames));
+        percentOfWins.setText(String.valueOf((int) winningPercent));
+        streak.setText(String.valueOf(currentStreak));
+        maxStreak.setText(String.valueOf(max_streak));
     }
 }

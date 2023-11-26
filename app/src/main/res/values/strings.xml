@@ -34,5 +34,10 @@
     <string name="wordle">WORDLE</string>
     <string name="result">result</string>
     <string name="play_again">Play again!</string>
+    <string name="statistics">STATISTICS</string>
+    <string name="played">Played</string>
+    <string name="win_percentage">Win %</string>
+    <string name="current_streak">Current streak</string>
+    <string name="max_streak">Max streak</string>
 
 </resources>

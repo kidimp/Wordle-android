@@ -6,14 +6,36 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import androidx.core.content.res.ResourcesCompat;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+
 public class DBHandler extends SQLiteOpenHelper {
-    private static final String DB_NAME = "wordle-android.db";
-    private static final int DB_VERSION = 1;
-    private static final String TABLE_NAME = "words";
-    private static final String NAME_COL = "word";
-    private Word word;
     private static DBHandler instance;
     SQLiteDatabase db = this.getReadableDatabase();
+    private static final String DB_NAME = "wordle-android.db";
+    private static final int DB_VERSION = 1;
+
+    private static final String WORDS = "words";
+    private static final String WORD = "word";
+    private Word word;
+
+    private static final String STATS = "stats";
+    private static final String GAMES = "games";
+    private static final String WINS = "wins";
+    private static final String STREAK = "streak";
+    private static final String MAX_STREAK = "max_streak";
+
+    int numberOfGames;
+    int numberOfWins;
+    int streak;
+    int maxStreak;
+
+    boolean previousGameResultIsVictory;
+
 
     private DBHandler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -29,6 +51,20 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        InputStream inputStream = App.getContext().getResources().openRawResource(R.raw.wordle_db);
+        String queries = "";
+        try(Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+            queries = scanner.useDelimiter("\\A").next();
+        } catch (Exception e) {
+            Log.d("IOExeption ----------> ", "ioexeption");
+        }
+        try {
+            for (String query : queries.split(";")) {
+                db.execSQL(query);
+            }
+        }
+        catch (Exception e) {}
+        int i = 0;
     }
 
 
@@ -38,10 +74,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     public void generateRandomWord() {
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY RANDOM() LIMIT 1", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + WORDS + " ORDER BY RANDOM() LIMIT 1", null);
         if (cursor.moveToFirst()) {
             word = new Word(cursor.getString(1).toUpperCase());
-            word = new Word("RALLY");
+            word = new Word("RALLY"); // for testing purposes
             Log.d("TARGET WORD ----------> ", word.getText());
         }
         cursor.close();
@@ -54,8 +90,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     public boolean isAttemptExist(String attempt) {
-        Cursor cursor = db.rawQuery("SELECT EXISTS(SELECT  " + NAME_COL + "  FROM "
-                + TABLE_NAME + " WHERE " + NAME_COL + " = '" + attempt.toLowerCase() + "')", null);
+        Cursor cursor = db.rawQuery("SELECT EXISTS(SELECT  " + WORD + "  FROM "
+                + WORDS + " WHERE " + WORD + " = '" + attempt.toLowerCase() + "')", null);
         cursor.moveToFirst();
 
         // cursor.getInt(0) is 1 if column with value exists
@@ -66,5 +102,101 @@ public class DBHandler extends SQLiteOpenHelper {
             cursor.close();
             return false;
         }
+    }
+
+
+    public int getNumberOfGames() {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + STATS, null);
+        cursor.moveToFirst();
+        numberOfGames = cursor.getInt(1);
+        cursor.close();
+
+        Log.d("NUMBER OF GAMES ----------> ", String.valueOf(numberOfGames));
+
+        return numberOfGames;
+    }
+
+    public void incrementNumberOfGames() {
+        getNumberOfGames();
+
+        numberOfGames++;
+
+        String query = "UPDATE " + STATS + " SET " + GAMES + " = " + numberOfGames + " WHERE id=1";
+        db.execSQL(query);
+    }
+
+
+    public int getNumberOfWins() {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + STATS, null);
+        cursor.moveToFirst();
+        numberOfWins = cursor.getInt(2);
+        cursor.close();
+
+        Log.d("NUMBER OF GAMES ----------> ", String.valueOf(numberOfWins));
+
+        return numberOfWins;
+    }
+
+    public void incrementNumberOfWins() {
+        getNumberOfWins();
+
+        numberOfWins++;
+
+        String query = "UPDATE " + STATS + " SET " + WINS + " = " + numberOfWins + " WHERE id=1";
+        db.execSQL(query);
+    }
+
+
+    public void setPreviousGameResult(boolean result) {
+        previousGameResultIsVictory = result;
+    }
+
+    public boolean getPreviousGameResult() {
+        return previousGameResultIsVictory;
+    }
+
+
+    public int getStreak() {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + STATS, null);
+        cursor.moveToFirst();
+        streak = cursor.getInt(3);
+
+        if (getPreviousGameResult()) {
+            String query = "UPDATE " + STATS + " SET " + MAX_STREAK + " = " + streak + " WHERE id=1";
+            db.execSQL(query);
+        }
+
+        cursor.close();
+
+        Log.d("STREAK ----------> ", String.valueOf(streak));
+
+        return streak;
+    }
+
+    public void incrementStreak() {
+        getStreak();
+
+        streak++;
+
+        String query = "UPDATE " + STATS + " SET " + STREAK + " = " + streak + " WHERE id=1";
+        db.execSQL(query);
+    }
+
+
+    public void resetStreak() {
+        String query = "UPDATE " + STATS + " SET " + STREAK + " = 0 WHERE id=1";
+        db.execSQL(query);
+    }
+
+
+    public int getMaxStreak() {
+        Cursor cursor = db.rawQuery("SELECT * FROM " + STATS, null);
+        cursor.moveToFirst();
+        maxStreak = cursor.getInt(4);
+        cursor.close();
+
+        Log.d("MAX STREAK ----------> ", String.valueOf(maxStreak));
+
+        return maxStreak;
     }
 }

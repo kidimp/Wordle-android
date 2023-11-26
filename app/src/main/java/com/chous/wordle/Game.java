@@ -26,6 +26,7 @@ public class Game {
         activity.keyboard.unblockButtons();
     }
 
+
     public void ButtonLetterClick(String text) {
         grid.addLetter(text);
     }
@@ -60,20 +61,37 @@ public class Game {
         grid.removeLetter();
     }
 
+
     private void showStat() {
         activity.keyboard.blockButtons();
         activity.ButtonResultClick();
     }
 
+
     private void winResult() {
+        dbHandler.setPreviousGameResult(true);
+
+        dbHandler.incrementNumberOfGames();
+        dbHandler.incrementNumberOfWins();
+
+        if (dbHandler.getPreviousGameResult()){
+            dbHandler.incrementStreak();
+        }
+
         Message.win(grid.getActiveLineIndex());
         showStat();
     }
 
     private void loseResult() {
+        dbHandler.setPreviousGameResult(false);
+
+        dbHandler.incrementNumberOfGames();
+        dbHandler.resetStreak();
+
         Message.lose(word.getText());
         showStat();
     }
+
 
     private boolean isPossibleAttempt(String attempt) {
         if (attempt.length() < Game.WORDLE_LENGTH) {
@@ -93,7 +111,4 @@ public class Game {
         grid.recolor();
         activity.keyboard.recolorButtons(grid);
     }
-
-
-
 }

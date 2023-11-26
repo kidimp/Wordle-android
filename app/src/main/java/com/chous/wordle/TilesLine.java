@@ -9,6 +9,7 @@ public class TilesLine {
     Word attempt;
     TextView[] tiles;
 
+
     public TilesLine(LinearLayout layout) {
         tiles = new TextView[Game.WORDLE_LENGTH];
         tiles[0] = layout.findViewById(R.id.Tile1);
@@ -17,6 +18,7 @@ public class TilesLine {
         tiles[3] = layout.findViewById(R.id.Tile4);
         tiles[4] = layout.findViewById(R.id.Tile5);
     }
+
 
     public void add(String letter) {
         TextView activeTile = getActiveTile();
@@ -44,6 +46,7 @@ public class TilesLine {
         }
         return null;
     }
+
 
     public void applyAttempt() {
         attempt = new Word(constructAttempt());
@@ -90,6 +93,7 @@ public class TilesLine {
             }
         }
     }
+
 
     public void clean() {
         for (TextView textView : tiles) {
