@@ -1,4 +1,3 @@
-CREATE DATABASE IF NOT EXISTS "\\Phone\\Android\\data\\com.chous.wordle\\files\\wordle-android.db";
 CREATE TABLE IF NOT EXISTS "words" (
 	"id"	INTEGER,
 	"word"	TEXT,

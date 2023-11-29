@@ -7,8 +7,7 @@ import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
     private Game game;
-    Keyboard keyboard;
-
+    public Keyboard keyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
     private void setupViews() {
         Message.setMessageSettings();
         ImageButton buttonStats = findViewById(R.id.button_stats);
-        buttonStats.setOnClickListener(v -> ButtonResultClick());
+        buttonStats.setOnClickListener(v -> ButtonStatsClick());
     }
 
 
-    public void ButtonResultClick() {
+    public void ButtonStatsClick() {
         DialogStats dialogStats = new DialogStats(this);
         dialogStats.updateStatsView();
         dialogStats.showDialog();

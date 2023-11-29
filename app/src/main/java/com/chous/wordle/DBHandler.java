@@ -6,16 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import androidx.core.content.res.ResourcesCompat;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static DBHandler instance;
-    SQLiteDatabase db = this.getReadableDatabase();
+    SQLiteDatabase db;
     private static final String DB_NAME = "wordle-android.db";
     private static final int DB_VERSION = 1;
 
@@ -33,13 +30,21 @@ public class DBHandler extends SQLiteOpenHelper {
     int numberOfWins;
     int streak;
     int maxStreak;
-
     boolean previousGameResultIsVictory;
 
 
     private DBHandler(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+
+        boolean isDBExist = isDatabaseExist(context);
+
+        db = this.getWritableDatabase();
+
+        if (!isDBExist) {
+            fillInDB();
+        }
     }
+
 
     public static DBHandler getInstance() {
         if (instance == null) {
@@ -51,20 +56,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        InputStream inputStream = App.getContext().getResources().openRawResource(R.raw.wordle_db);
-        String queries = "";
-        try(Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
-            queries = scanner.useDelimiter("\\A").next();
-        } catch (Exception e) {
-            Log.d("IOExeption ----------> ", "ioexeption");
-        }
-        try {
-            for (String query : queries.split(";")) {
-                db.execSQL(query);
-            }
-        }
-        catch (Exception e) {}
-        int i = 0;
     }
 
 
@@ -73,12 +64,54 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+    public boolean isDatabaseExist(Context context) {
+        SQLiteDatabase checkDB = null;
+        String fullPath = context.getDatabasePath(DB_NAME).getPath();
+
+        try {
+            // Attempt to open the database
+            checkDB = SQLiteDatabase.openDatabase(fullPath, null, SQLiteDatabase.OPEN_READONLY);
+        } catch (Exception e) {
+            // Database does not exist
+        }
+
+        // Close the database if it was opened
+        if (checkDB != null) {
+            checkDB.close();
+        }
+
+        return checkDB != null;
+    }
+
+
+    public void fillInDB() {
+        db.beginTransaction();
+        try {
+            InputStream inputStream = App.getContext().getResources().openRawResource(R.raw.wordle_db);
+            String queries = "";
+            try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+                queries = scanner.useDelimiter("\\A").next();
+            } catch (Exception e) {
+                Log.d("IOExeption", "IOExeption");
+            }
+            for (String query : queries.split(";")) {
+                db.execSQL(query);
+            }
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.d("SQL Error", "Error while trying to add data to database");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
     public void generateRandomWord() {
         Cursor cursor = db.rawQuery("SELECT * FROM " + WORDS + " ORDER BY RANDOM() LIMIT 1", null);
         if (cursor.moveToFirst()) {
             word = new Word(cursor.getString(1).toUpperCase());
             word = new Word("RALLY"); // for testing purposes
-            Log.d("TARGET WORD ----------> ", word.getText());
+            Log.d("TARGET WORD", word.getText());
         }
         cursor.close();
     }
@@ -111,7 +144,7 @@ public class DBHandler extends SQLiteOpenHelper {
         numberOfGames = cursor.getInt(1);
         cursor.close();
 
-        Log.d("NUMBER OF GAMES ----------> ", String.valueOf(numberOfGames));
+        Log.d("NUMBER OF GAMES", String.valueOf(numberOfGames));
 
         return numberOfGames;
     }
@@ -132,7 +165,7 @@ public class DBHandler extends SQLiteOpenHelper {
         numberOfWins = cursor.getInt(2);
         cursor.close();
 
-        Log.d("NUMBER OF GAMES ----------> ", String.valueOf(numberOfWins));
+        Log.d("NUMBER OF GAMES", String.valueOf(numberOfWins));
 
         return numberOfWins;
     }
@@ -161,14 +194,9 @@ public class DBHandler extends SQLiteOpenHelper {
         cursor.moveToFirst();
         streak = cursor.getInt(3);
 
-        if (getPreviousGameResult()) {
-            String query = "UPDATE " + STATS + " SET " + MAX_STREAK + " = " + streak + " WHERE id=1";
-            db.execSQL(query);
-        }
-
         cursor.close();
 
-        Log.d("STREAK ----------> ", String.valueOf(streak));
+        Log.d("STREAK", String.valueOf(streak));
 
         return streak;
     }
@@ -195,8 +223,16 @@ public class DBHandler extends SQLiteOpenHelper {
         maxStreak = cursor.getInt(4);
         cursor.close();
 
-        Log.d("MAX STREAK ----------> ", String.valueOf(maxStreak));
+        Log.d("MAX STREAK", String.valueOf(maxStreak));
 
         return maxStreak;
+    }
+
+
+    public void updateMaxStreak() {
+        if (getPreviousGameResult() && getStreak() > getMaxStreak()) {
+            String query = "UPDATE " + STATS + " SET " + MAX_STREAK + " = " + streak + " WHERE id=1";
+            db.execSQL(query);
+        }
     }
 }

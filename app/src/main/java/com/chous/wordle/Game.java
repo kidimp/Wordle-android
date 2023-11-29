@@ -64,7 +64,7 @@ public class Game {
 
     private void showStat() {
         activity.keyboard.blockButtons();
-        activity.ButtonResultClick();
+        activity.ButtonStatsClick();
     }
 
 
@@ -76,6 +76,7 @@ public class Game {
 
         if (dbHandler.getPreviousGameResult()){
             dbHandler.incrementStreak();
+            dbHandler.updateMaxStreak();
         }
 
         Message.win(grid.getActiveLineIndex());
