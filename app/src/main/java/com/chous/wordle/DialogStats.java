@@ -62,6 +62,9 @@ public class DialogStats {
     }
 
     private void buttonNewGameClick() {
+        if (!dbHandler.getIsGameFinished()){
+            dbHandler.incrementNumberOfGames();
+        }
         activity.getGame().create();
         buttonCloseDialogClick();
     }

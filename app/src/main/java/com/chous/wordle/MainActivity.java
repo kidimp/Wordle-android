@@ -23,7 +23,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public Game getGame() { return game; }
+    public Game getGame() {
+        return game;
+    }
 
 
     private void setupViews() {

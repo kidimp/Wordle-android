@@ -2,13 +2,17 @@ package com.chous.wordle;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static DBHandler instance;
@@ -31,6 +35,7 @@ public class DBHandler extends SQLiteOpenHelper {
     int streak;
     int maxStreak;
     boolean previousGameResultIsVictory;
+    private boolean isGameFinished = false;
 
 
     private DBHandler(Context context) {
@@ -64,15 +69,36 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+    @Override
+    protected void finalize() {
+        db.close();
+    }
+
     public boolean isDatabaseExist(Context context) {
         SQLiteDatabase checkDB = null;
         String fullPath = context.getDatabasePath(DB_NAME).getPath();
+        boolean tableExists = false;
 
         try {
             // Attempt to open the database
             checkDB = SQLiteDatabase.openDatabase(fullPath, null, SQLiteDatabase.OPEN_READONLY);
+
+            // Check if the table exists
+            if (checkDB != null) {
+                Cursor cursor = checkDB.rawQuery(
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name='" + WORDS + "';",
+                        null
+                );
+
+                // Check if the cursor has any results
+                if (cursor != null) {
+                    tableExists = cursor.getCount() > 0;
+                    cursor.close();
+                }
+            }
+
         } catch (Exception e) {
-            // Database does not exist
+            // Database or table does not exist
         }
 
         // Close the database if it was opened
@@ -80,26 +106,47 @@ public class DBHandler extends SQLiteOpenHelper {
             checkDB.close();
         }
 
-        return checkDB != null;
+        return (checkDB != null) && (tableExists);
     }
 
 
     public void fillInDB() {
         db.beginTransaction();
+
+        SQLiteStatement statement = null;
+
         try {
             InputStream inputStream = App.getContext().getResources().openRawResource(R.raw.wordle_db);
-            String queries = "";
-            try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
-                queries = scanner.useDelimiter("\\A").next();
-            } catch (Exception e) {
-                Log.d("IOExeption", "IOExeption");
+            StringBuilder queriesBuilder = new StringBuilder();
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    queriesBuilder.append(line);
+                }
+            } catch (IOException e) {
+                Log.e("IOException", "IOException while reading from input stream", e);
             }
+
+            String queries = queriesBuilder.toString();
+
             for (String query : queries.split(";")) {
-                db.execSQL(query);
+                try {
+                    statement = db.compileStatement(query.trim());
+                    statement.execute();
+                } catch (SQLException e) {
+                    Log.e("SQL Error", "Error executing SQL query: " + query, e);
+                } finally {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                }
             }
+
             db.setTransactionSuccessful();
+
         } catch (Exception e) {
-            Log.d("SQL Error", "Error while trying to add data to database");
+            Log.e("Database Error", "Error while trying to add data to the database", e);
         } finally {
             db.endTransaction();
         }
@@ -110,7 +157,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + WORDS + " ORDER BY RANDOM() LIMIT 1", null);
         if (cursor.moveToFirst()) {
             word = new Word(cursor.getString(1).toUpperCase());
-            word = new Word("RALLY"); // for testing purposes
+//            word = new Word("RALLY"); // for testing purposes
             Log.d("TARGET WORD", word.getText());
         }
         cursor.close();
@@ -186,6 +233,15 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public boolean getPreviousGameResult() {
         return previousGameResultIsVictory;
+    }
+
+
+    public boolean getIsGameFinished() {
+        return isGameFinished;
+    }
+
+    public void setIsGameFinished(boolean isGameFinished) {
+        this.isGameFinished = isGameFinished;
     }
 
 

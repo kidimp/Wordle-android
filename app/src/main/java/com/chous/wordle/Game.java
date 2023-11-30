@@ -19,6 +19,7 @@ public class Game {
 
 
     public void create() {
+        dbHandler.setIsGameFinished(false);
         dbHandler.generateRandomWord();
         word = dbHandler.getWord();
         grid.clean();
@@ -69,6 +70,7 @@ public class Game {
 
 
     private void winResult() {
+        dbHandler.setIsGameFinished(true);
         dbHandler.setPreviousGameResult(true);
 
         dbHandler.incrementNumberOfGames();
@@ -84,6 +86,7 @@ public class Game {
     }
 
     private void loseResult() {
+        dbHandler.setIsGameFinished(true);
         dbHandler.setPreviousGameResult(false);
 
         dbHandler.incrementNumberOfGames();
