@@ -1,5 +1,9 @@
 package com.chous.wordle;
 
+/**
+ * The Game class represents the logic and state management of the Wordle game.
+ * It is responsible for handling user interactions, managing the game grid, and controlling game flow.
+ */
 public class Game {
     Grid grid;
     MainActivity activity;
@@ -8,7 +12,11 @@ public class Game {
     public static final int WORDLE_LENGTH = 5;
     public static final int AMOUNT_OF_ATTEMPTS = 6;
 
-
+    /**
+     * Constructor for the Game class.
+     *
+     * @param activity The MainActivity instance associated with this game.
+     */
     public Game(MainActivity activity) {
         this.activity = activity;
 
@@ -17,7 +25,9 @@ public class Game {
         dbHandler = DBHandler.getInstance();
     }
 
-
+    /**
+     * Initializes a new game, resetting the game state and generating a new target word.
+     */
     public void create() {
         dbHandler.setIsGameFinished(false);
         dbHandler.generateRandomWord();
@@ -27,16 +37,22 @@ public class Game {
         activity.keyboard.unblockButtons();
     }
 
-
+    /**
+     * Handles a letter button click, adding the clicked letter to the current attempt.
+     *
+     * @param text The text of the clicked letter button.
+     */
     public void ButtonLetterClick(String text) {
         grid.addLetter(text);
     }
 
-
+    /**
+     * Handles the enter button click, validating the current attempt and progressing the game accordingly.
+     */
     public void ButtonEnterClick() {
         String attempt = grid.getCurrentAttempt();
 
-        if (!isPossibleAttempt(attempt)) {
+        if (!isAttemptValid(attempt)) {
             return;
         }
 
@@ -49,7 +65,7 @@ public class Game {
             return;
         }
 
-        if (grid.getActiveLineIndex() >= Game.AMOUNT_OF_ATTEMPTS -1) {
+        if (grid.getActiveLineIndex() >= Game.AMOUNT_OF_ATTEMPTS - 1) {
             loseResult();
             return;
         }
@@ -57,18 +73,25 @@ public class Game {
         grid.nextLine();
     }
 
-
+    /**
+     * Handles the delete button click, removing the last entered letter from the current attempt.
+     */
     public void ButtonDeleteClick() {
         grid.removeLetter();
     }
 
 
+    /**
+     * Displays the statistics dialog and blocks further keyboard interactions.
+     */
     private void showStat() {
         activity.keyboard.blockButtons();
         activity.ButtonStatsClick();
     }
 
-
+    /**
+     * Handles the game result when the player wins.
+     */
     private void winResult() {
         dbHandler.setIsGameFinished(true);
         dbHandler.setPreviousGameResult(true);
@@ -76,7 +99,7 @@ public class Game {
         dbHandler.incrementNumberOfGames();
         dbHandler.incrementNumberOfWins();
 
-        if (dbHandler.getPreviousGameResult()){
+        if (dbHandler.getPreviousGameResult()) {
             dbHandler.incrementStreak();
             dbHandler.updateMaxStreak();
         }
@@ -85,6 +108,9 @@ public class Game {
         showStat();
     }
 
+    /**
+     * Handles the game result when the player loses.
+     */
     private void loseResult() {
         dbHandler.setIsGameFinished(true);
         dbHandler.setPreviousGameResult(false);
@@ -96,8 +122,14 @@ public class Game {
         showStat();
     }
 
-
-    private boolean isPossibleAttempt(String attempt) {
+    /**
+     * Checks if a given attempt is valid (is it enough amount of letters and
+     * is attempt word exist in database).
+     *
+     * @param attempt The current attempt to be validated.
+     * @return True if the attempt is valid, false otherwise.
+     */
+    private boolean isAttemptValid(String attempt) {
         if (attempt.length() < Game.WORDLE_LENGTH) {
             Message.notEnoughLetters();
             return false;
@@ -110,7 +142,9 @@ public class Game {
         return true;
     }
 
-
+    /**
+     * Recolors the views within the game grid and keyboard to provide visual feedback.
+     */
     private void recolorViews() {
         grid.recolor();
         activity.keyboard.recolorButtons(grid);
